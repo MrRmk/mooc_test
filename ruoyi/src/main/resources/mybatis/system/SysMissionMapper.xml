@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.SysMissionMapper">
+    
+    <resultMap type="SysMission" id="SysMissionResult">
+        <result property="id"    column="id"    />
+        <result property="missionNumber"    column="mission_number"    />
+        <result property="schoolId"    column="school_id"    />
+        <result property="courseName"    column="course_name"    />
+        <result property="teacherId"    column="teacher_id"    />
+        <result property="coursewareUrl"    column="courseware_url"    />
+        <result property="coursewareType"    column="courseware_type"    />
+        <result property="shotTime"    column="shot_time"    />
+        <result property="shotLocation"    column="shot_location"    />
+        <result property="shotType"    column="shot_type"    />
+        <result property="shotPersonnel"    column="shot_personnel"    />
+        <result property="postPersonnel"    column="post_personnel"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="auditFileurl"    column="audit_fileurl"    />
+        <result property="auditLabel"    column="audit_label"    />
+        <result property="isDeleted"    column="is_deleted"    />
+        <result property="deletedTime"    column="deleted_time"    />
+        <result property="submitTime"    column="submit_time"    />
+        <result property="appointmentStatus"    column="appointment_status"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+    <resultMap type="MissionVo" id="MissionResultVO">
+        <result property="id"    column="id"    />
+        <result property="missionNumber"    column="mission_number"    />
+        <result property="schoolId"    column="school_id"    />
+        <result property="courseName"    column="course_name"    />
+        <result property="teacherId"    column="teacher_id"    />
+        <result property="coursewareUrl"    column="courseware_url"    />
+        <result property="coursewareType"    column="courseware_type"    />
+        <result property="shotTime"    column="shot_time"    />
+        <result property="shotLocation"    column="shot_location"    />
+        <result property="shotType"    column="shot_type"    />
+        <result property="shotPersonnel"    column="shot_personnel"    />
+        <result property="postPersonnel"    column="post_personnel"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="auditFileurl"    column="audit_fileurl"    />
+        <result property="auditLabel"    column="audit_label"    />
+        <result property="isDeleted"    column="is_deleted"    />
+        <result property="deletedTime"    column="deleted_time"    />
+        <result property="submitTime"    column="submit_time"    />
+        <result property="appointmentStatus"    column="appointment_status"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+    <sql id="selectSysMissionVo">
+        select id, mission_number, school_id, course_name, teacher_id, courseware_url, courseware_type, shot_time, shot_location, shot_type, shot_personnel, post_personnel, remarks, audit_fileurl, audit_label, is_deleted, deleted_time, submit_time, appointment_status, update_time from sys_mission
+    </sql>
+    <sql id="selectMissionVo">
+        SELECT
+        id,
+        mission_number,
+        school_id,
+        course_name,
+        concat(
+        (
+        SELECT
+        nick_name
+        FROM
+        sys_user
+        WHERE
+        user_id = teacher_id
+        ),
+        ' ',
+        (
+        SELECT
+        sys_post.post_name
+        FROM
+        sys_post,
+        sys_user_post
+        WHERE
+        sys_user_post.post_id = sys_post.post_id
+        AND sys_user_post.user_id = teacher_id
+        )
+        ) AS teacherName,
+        teacher_id,
+        courseware_url,
+        courseware_type,
+        shot_time,
+        shot_location,
+        shot_type,
+        concat(
+        '摄像：',
+        (
+        SELECT
+        nick_name
+        FROM
+        sys_user
+        WHERE
+        user_id = shot_personnel
+        ),
+        '  ',
+        '后期：',
+        (
+        SELECT
+        nick_name
+        FROM
+        sys_user
+        WHERE
+        user_id = post_personnel
+        )
+        ) AS staffing,
+        post_personnel,
+        shot_personnel,
+        remarks,
+        audit_fileurl,
+        audit_label,
+        is_deleted,
+        deleted_time,
+        submit_time,
+        appointment_status,
+        update_time
+        FROM
+        sys_mission
+    </sql>
+    <select id="selectMissionVoList" parameterType="SysMission" resultMap="MissionResultVO">
+        <include refid="selectMissionVo"/>
+        <where>
+            <if test="missionNumber != null  and missionNumber != ''"> and mission_number = #{missionNumber}</if>
+            <if test="schoolId != null "> and school_id = #{schoolId}</if>
+            <if test="courseName != null  and courseName != ''"> and course_name like concat('%', #{course_name}, '%')</if>
+            <if test="teacherId != null "> and teacher_id = #{teacherId}</if>
+            <if test="coursewareUrl != null  and coursewareUrl != ''"> and courseware_url = #{coursewareUrl}</if>
+            <if test="coursewareType != null  and coursewareType != ''"> and courseware_type = #{coursewareType}</if>
+            <if test="shotTime != null "> and shot_time = #{shotTime}</if>
+            <if test="shotLocation != null  and shotLocation != ''"> and shot_location = #{shotLocation}</if>
+            <if test="shotType != null  and shotType != ''"> and shot_type = #{shotType}</if>
+            <if test="shotPersonnel != null "> and shot_personnel = #{shotPersonnel}</if>
+            <if test="postPersonnel != null "> and post_personnel = #{postPersonnel}</if>
+            <if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
+            <if test="auditFileurl != null  and auditFileurl != ''"> and audit_fileurl = #{auditFileurl}</if>
+            <if test="auditLabel != null  and auditLabel != ''"> and audit_label = #{auditLabel}</if>
+            <if test="isDeleted != null  and isDeleted != ''"> and is_deleted = #{isDeleted}</if>
+            <if test="deletedTime != null "> and deleted_time = #{deletedTime}</if>
+            <if test="submitTime != null "> and submit_time = #{submitTime}</if>
+            <if test="appointmentStatus != null  and appointmentStatus != ''"> and appointment_status = #{appointmentStatus}</if>
+        </where>
+    </select>
+    <select id="selectSysMissionList" parameterType="SysMission" resultMap="SysMissionResult">
+        <include refid="selectSysMissionVo"/>
+        <where>  
+            <if test="missionNumber != null  and missionNumber != ''"> and mission_number = #{missionNumber}</if>
+            <if test="schoolId != null "> and school_id = #{schoolId}</if>
+            <if test="courseName != null  and courseName != ''"> and course_name like concat('%', #{course_name}, '%')</if>
+            <if test="teacherId != null "> and teacher_id = #{teacherId}</if>
+            <if test="coursewareUrl != null  and coursewareUrl != ''"> and courseware_url = #{coursewareUrl}</if>
+            <if test="coursewareType != null  and coursewareType != ''"> and courseware_type = #{coursewareType}</if>
+            <if test="shotTime != null "> and shot_time = #{shotTime}</if>
+            <if test="shotLocation != null  and shotLocation != ''"> and shot_location = #{shotLocation}</if>
+            <if test="shotType != null  and shotType != ''"> and shot_type = #{shotType}</if>
+            <if test="shotPersonnel != null "> and shot_personnel = #{shotPersonnel}</if>
+            <if test="postPersonnel != null "> and post_personnel = #{postPersonnel}</if>
+            <if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
+            <if test="auditFileurl != null  and auditFileurl != ''"> and audit_fileurl = #{auditFileurl}</if>
+            <if test="auditLabel != null  and auditLabel != ''"> and audit_label = #{auditLabel}</if>
+            <if test="isDeleted != null  and isDeleted != ''"> and is_deleted = #{isDeleted}</if>
+            <if test="deletedTime != null "> and deleted_time = #{deletedTime}</if>
+            <if test="submitTime != null "> and submit_time = #{submitTime}</if>
+            <if test="appointmentStatus != null  and appointmentStatus != ''"> and appointment_status = #{appointmentStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysMissionById" parameterType="Long" resultMap="SysMissionResult">
+        <include refid="selectSysMissionVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysMission" parameterType="SysMission" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_mission
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="missionNumber != null  and missionNumber != ''">mission_number,</if>
+            <if test="schoolId != null ">school_id,</if>
+            <if test="courseName != null  and courseName != ''">course_name,</if>
+            <if test="teacherId != null ">teacher_id,</if>
+            <if test="coursewareUrl != null  and coursewareUrl != ''">courseware_url,</if>
+            <if test="coursewareType != null  and coursewareType != ''">courseware_type,</if>
+            <if test="shotTime != null ">shot_time,</if>
+            <if test="shotLocation != null  and shotLocation != ''">shot_location,</if>
+            <if test="shotType != null  and shotType != ''">shot_type,</if>
+            <if test="shotPersonnel != null ">shot_personnel,</if>
+            <if test="postPersonnel != null ">post_personnel,</if>
+            <if test="remarks != null  and remarks != ''">remarks,</if>
+            <if test="auditFileurl != null  and auditFileurl != ''">audit_fileurl,</if>
+            <if test="auditLabel != null  and auditLabel != ''">audit_label,</if>
+            <if test="isDeleted != null  and isDeleted != ''">is_deleted,</if>
+            <if test="deletedTime != null ">deleted_time,</if>
+            <if test="submitTime != null ">submit_time,</if>
+            <if test="appointmentStatus != null  and appointmentStatus != ''">appointment_status,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="missionNumber != null  and missionNumber != ''">#{missionNumber},</if>
+            <if test="schoolId != null ">#{schoolId},</if>
+            <if test="courseName != null  and courseName != ''">#{courseName},</if>
+            <if test="teacherId != null ">#{teacherId},</if>
+            <if test="coursewareUrl != null  and coursewareUrl != ''">#{coursewareUrl},</if>
+            <if test="coursewareType != null  and coursewareType != ''">#{coursewareType},</if>
+            <if test="shotTime != null ">#{shotTime},</if>
+            <if test="shotLocation != null  and shotLocation != ''">#{shotLocation},</if>
+            <if test="shotType != null  and shotType != ''">#{shotType},</if>
+            <if test="shotPersonnel != null ">#{shotPersonnel},</if>
+            <if test="postPersonnel != null ">#{postPersonnel},</if>
+            <if test="remarks != null  and remarks != ''">#{remarks},</if>
+            <if test="auditFileurl != null  and auditFileurl != ''">#{auditFileurl},</if>
+            <if test="auditLabel != null  and auditLabel != ''">#{auditLabel},</if>
+            <if test="isDeleted != null  and isDeleted != ''">#{isDeleted},</if>
+            <if test="deletedTime != null ">#{deletedTime},</if>
+            <if test="submitTime != null ">#{submitTime},</if>
+            <if test="appointmentStatus != null  and appointmentStatus != ''">#{appointmentStatus},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysMission" parameterType="SysMission">
+        update sys_mission
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="missionNumber != null  and missionNumber != ''">mission_number = #{missionNumber},</if>
+            <if test="schoolId != null ">school_id = #{schoolId},</if>
+            <if test="courseName != null  and courseName != ''">course_name = #{courseName},</if>
+            <if test="teacherId != null ">teacher_id = #{teacherId},</if>
+            <if test="coursewareUrl != null  and coursewareUrl != ''">courseware_url = #{coursewareUrl},</if>
+            <if test="coursewareType != null  and coursewareType != ''">courseware_type = #{coursewareType},</if>
+            <if test="shotTime != null ">shot_time = #{shotTime},</if>
+            <if test="shotLocation != null  and shotLocation != ''">shot_location = #{shotLocation},</if>
+            <if test="shotType != null  and shotType != ''">shot_type = #{shotType},</if>
+            <if test="shotPersonnel != null ">shot_personnel = #{shotPersonnel},</if>
+            <if test="postPersonnel != null ">post_personnel = #{postPersonnel},</if>
+            <if test="remarks != null  and remarks != ''">remarks = #{remarks},</if>
+            <if test="auditFileurl != null  and auditFileurl != ''">audit_fileurl = #{auditFileurl},</if>
+            <if test="auditLabel != null  and auditLabel != ''">audit_label = #{auditLabel},</if>
+            <if test="isDeleted != null  and isDeleted != ''">is_deleted = #{isDeleted},</if>
+            <if test="deletedTime != null ">deleted_time = #{deletedTime},</if>
+            <if test="submitTime != null ">submit_time = #{submitTime},</if>
+            <if test="appointmentStatus != null  and appointmentStatus != ''">appointment_status = #{appointmentStatus},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysMissionById" parameterType="Long">
+        delete from sys_mission where id = #{id}
+    </delete>
+
+    <delete id="deleteSysMissionByIds" parameterType="String">
+        delete from sys_mission where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.SysStoreMapper">
+    
+    <resultMap type="SysStore" id="SysStoreResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="introduction"    column="introduction"    />
+        <result property="phone"    column="phone"    />
+        <result property="address"    column="address"    />
+        <result property="detailedAddress"    column="detailed_address"    />
+        <result property="image"    column="image"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="validTime"    column="valid_time"    />
+        <result property="dayTime"    column="day_time"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="rejectionResult" column="rejection_result"/>
+        <result property="isShow"    column="is_show"    />
+        <result property="isDel"    column="is_del"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectSysStoreVo">
+        select id, name, introduction, phone, address, detailed_address, image, latitude, longitude, valid_time, day_time,add_time, is_show, is_del, status from sys_store
+    </sql>
+
+    <select id="selectSysStoreList" parameterType="SysStore" resultMap="SysStoreResult">
+        <include refid="selectSysStoreVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="introduction != null  and introduction != ''"> and introduction = #{introduction}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="detailedAddress != null  and detailedAddress != ''"> and detailed_address = #{detailedAddress}</if>
+            <if test="image != null  and image != ''"> and image = #{image}</if>
+            <if test="latitude != null  and latitude != ''"> and latitude = #{latitude}</if>
+            <if test="longitude != null  and longitude != ''"> and longitude = #{longitude}</if>
+            <if test="validTime != null  and validTime != ''"> and valid_time = #{validTime}</if>
+            <if test="dayTime != null  and dayTime != ''"> and day_time = #{dayTime}</if>
+            <if test="isShow != null "> and is_show = #{isShow}</if>
+            <if test="isDel != null "> and is_del = #{isDel}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysStoreById" parameterType="Integer" resultMap="SysStoreResult">
+        <include refid="selectSysStoreVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysStore" parameterType="SysStore" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_store
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">name,</if>
+            <if test="introduction != null  and introduction != ''">introduction,</if>
+            <if test="phone != null  and phone != ''">phone,</if>
+            <if test="address != null  and address != ''">address,</if>
+            <if test="detailedAddress != null  and detailedAddress != ''">detailed_address,</if>
+            <if test="image != null  and image != ''">image,</if>
+            <if test="latitude != null  and latitude != ''">latitude,</if>
+            <if test="longitude != null  and longitude != ''">longitude,</if>
+            <if test="validTime != null  and validTime != ''">valid_time,</if>
+            <if test="dayTime != null  and dayTime != ''">day_time,</if>
+            add_time,
+            <if test="isShow != null ">is_show,</if>
+            <if test="isDel != null ">is_del,</if>
+            <if test="status != null ">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="introduction != null  and introduction != ''">#{introduction},</if>
+            <if test="phone != null  and phone != ''">#{phone},</if>
+            <if test="address != null  and address != ''">#{address},</if>
+            <if test="detailedAddress != null  and detailedAddress != ''">#{detailedAddress},</if>
+            <if test="image != null  and image != ''">#{image},</if>
+            <if test="latitude != null  and latitude != ''">#{latitude},</if>
+            <if test="longitude != null  and longitude != ''">#{longitude},</if>
+            <if test="validTime != null  and validTime != ''">#{validTime},</if>
+            <if test="dayTime != null  and dayTime != ''">#{dayTime},</if>
+            now(),
+            <if test="isShow != null ">#{isShow},</if>
+            <if test="isDel != null ">#{isDel},</if>
+            <if test="status != null ">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysStore" parameterType="SysStore">
+        update sys_store
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="introduction != null  and introduction != ''">introduction = #{introduction},</if>
+            <if test="phone != null  and phone != ''">phone = #{phone},</if>
+            <if test="address != null  and address != ''">address = #{address},</if>
+            <if test="detailedAddress != null  and detailedAddress != ''">detailed_address = #{detailedAddress},</if>
+            <if test="image != null  and image != ''">image = #{image},</if>
+            <if test="latitude != null  and latitude != ''">latitude = #{latitude},</if>
+            <if test="longitude != null  and longitude != ''">longitude = #{longitude},</if>
+            <if test="validTime != null  and validTime != ''">valid_time = #{validTime},</if>
+            <if test="dayTime != null  and dayTime != ''">day_time = #{dayTime},</if>
+            <if test="addTime != null ">add_time = #{addTime},</if>
+            <if test="isShow != null ">is_show = #{isShow},</if>
+            <if test="isDel != null ">is_del = #{isDel},</if>
+            <if test="status != null ">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <update id="updateStatus" parameterType="SysStore">
+    	update sys_store set status = #{status},rejection_result=#{rejectionResult} where id = #{id}
+    </update>
+    
+
+    <delete id="deleteSysStoreById" parameterType="Integer">
+        delete from sys_store where id = #{id}
+    </delete>
+
+    <delete id="deleteSysStoreByIds" parameterType="String">
+        delete from sys_store where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
